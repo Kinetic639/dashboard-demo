@@ -59,9 +59,9 @@ function generateBreadcrumbs(pathname: string) {
     currentPath += `/${segments[i]}`;
     const fullPath = `/dashboard${currentPath}`;
     const isLast = i === segments.length - 1;
-    
+
     let label = segments[i];
-    
+
     // Custom labels for known paths
     switch (segments[i]) {
       case 'warehouse':
@@ -90,7 +90,7 @@ function generateBreadcrumbs(pathname: string) {
         break;
       default:
         // For dynamic segments like IDs, try to get a meaningful name
-        if (segments[i-1] === 'locations' && segments[i].length > 5) {
+        if (segments[i - 1] === 'locations' && segments[i].length > 5) {
           label = 'Szczegóły lokalizacji';
         } else {
           // Capitalize first letter
@@ -163,9 +163,9 @@ export function Header() {
             </Button>
 
             {/* Notifications */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="relative"
               onClick={openDrawer}
             >
@@ -243,9 +243,15 @@ export function Header() {
                       </BreadcrumbPage>
                     ) : (
                       <BreadcrumbLink asChild>
-                        <Link href={crumb.href} className="text-sm hover:text-foreground">
-                          {index === 0 && <Home className="h-3 w-3 mr-1" />}
-                          {crumb.label}
+                        <Link href={crumb.href} className="text-xs hover:text-foreground flex items-center">
+                          {index === 0 ? (
+                            <>
+                              <Home className="h-3 w-3" />
+                              <span className="sr-only">Strona główna</span>
+                            </>
+                          ) : (
+                            crumb.label
+                          )}
                         </Link>
                       </BreadcrumbLink>
                     )}
@@ -261,7 +267,7 @@ export function Header() {
           </Breadcrumb>
         </div>
       </header>
-      
+
       <NotificationsDrawer />
     </>
   );

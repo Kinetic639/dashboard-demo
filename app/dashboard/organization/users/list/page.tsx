@@ -45,7 +45,6 @@ import {
 } from 'lucide-react';
 import { 
   mockUsers, 
-  mockBranches, 
   mockRoles, 
   mockUserRoles,
   getUsersByOrganization,
@@ -53,6 +52,7 @@ import {
 } from '@/lib/mock/organization';
 import { formatDistanceToNow } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import { mockBranches } from '@/lib/mock/branches';
 
 export default function UsersListPage() {
   const [searchQuery, setSearchQuery] = React.useState('');

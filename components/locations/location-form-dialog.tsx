@@ -34,7 +34,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LocationTreeItem } from '@/lib/types/location-tree';
-import { Tables } from '@/lib/types';
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const locationSchema = z.object({
   name: z.string().min(1, 'Nazwa jest wymagana'),
@@ -119,7 +119,8 @@ export function LocationFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+<DialogContent className="sm:max-w-[600px] p-0 flex flex-col max-h-[90vh]">
+  <ScrollArea className="flex-1 overflow-y-auto px-6 py-4">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Edytuj lokalizację' : 'Dodaj nową lokalizację'}
@@ -324,6 +325,7 @@ export function LocationFormDialog({
             </DialogFooter>
           </form>
         </Form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

@@ -37,6 +37,8 @@ import { Badge } from '@/components/ui/badge';
 import { useSavedFiltersStore } from '@/lib/stores/saved-filters-store';
 import { useBranchStore } from '@/lib/stores/branch-store';
 import { getCurrentUser } from '@/lib/mock/organization';
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 
 const saveFilterSchema = z.object({
   name: z.string().min(1, 'Nazwa jest wymagana').max(50, 'Nazwa może mieć maksymalnie 50 znaków'),
@@ -105,14 +107,14 @@ export function SaveFilterDialog({
       userId: currentUser.id,
       branchId: activeBranchId,
     });
-    
+
     onOpenChange(false);
     form.reset();
   };
 
   const getFilterSummary = () => {
     const summary = [];
-    
+
     if (currentFilters.search) {
       summary.push(`Wyszukiwanie: "${currentFilters.search}"`);
     }
@@ -137,243 +139,245 @@ export function SaveFilterDialog({
       };
       summary.push(`Rodzaj: ${serviceLabels[currentFilters.service as keyof typeof serviceLabels]}`);
     }
-    
+
     return summary.length > 0 ? summary : ['Brak aktywnych filtrów'];
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Zapisz filtr</DialogTitle>
-          <DialogDescription>
-            Zapisz bieżące ustawienia filtrów, aby móc szybko je zastosować w przyszłości
-          </DialogDescription>
-        </DialogHeader>
+<DialogContent className="sm:max-w-[600px] p-0 flex flex-col max-h-[90vh]">
+  <ScrollArea className="flex-1 overflow-y-auto px-6 py-4">
+          <DialogHeader className="mb-4">
+            <DialogTitle>Zapisz filtr</DialogTitle>
+            <DialogDescription>
+              Zapisz bieżące ustawienia filtrów, aby móc szybko je zastosować w przyszłości
+            </DialogDescription>
+          </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Current Filters Summary */}
-            <div className="border rounded-lg p-4 bg-muted/20">
-              <h4 className="text-sm font-medium mb-2">Zapisywane filtry:</h4>
-              <div className="space-y-1">
-                {getFilterSummary().map((filter, index) => (
-                  <div key={index} className="text-sm text-muted-foreground">
-                    • {filter}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nazwa filtru *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="np. Dostępne lakiery" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="addToSidebar"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-sm">
-                          Dodaj do sidebara
-                        </FormLabel>
-                        <FormDescription className="text-xs">
-                          Filtr będzie dostępny w menu bocznym
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="isPublic"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-sm">
-                          Filtr publiczny
-                        </FormLabel>
-                        <FormDescription className="text-xs">
-                          Inni użytkownicy w oddziale będą mogli zobaczyć i skopiować ten filtr
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Opis (opcjonalny)</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Krótki opis filtru..."
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Maksymalnie 200 znaków
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="icon"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ikona *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Wybierz ikonę">
-                            {field.value && (
-                              <div className="flex items-center gap-2">
-                                <SelectedIcon className="h-4 w-4" />
-                                {field.value}
-                              </div>
-                            )}
-                          </SelectValue>
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="max-h-[200px]">
-                        {iconOptions.map((icon) => {
-                          const IconComponent = Icons[icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
-                          return (
-                            <SelectItem key={icon} value={icon}>
-                              <div className="flex items-center gap-2">
-                                <IconComponent className="h-4 w-4" />
-                                {icon}
-                              </div>
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="color"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kolor *</FormLabel>
-                    <FormControl>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <div 
-                            className="w-8 h-8 rounded border"
-                            style={{ backgroundColor: field.value }}
-                          />
-                          <Input 
-                            type="color" 
-                            className="w-16 h-8 p-1 border rounded"
-                            {...field}
-                          />
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          {colorOptions.map((color) => (
-                            <button
-                              key={color}
-                              type="button"
-                              className="w-6 h-6 rounded border-2 border-transparent hover:border-gray-300"
-                              style={{ backgroundColor: color }}
-                              onClick={() => field.onChange(color)}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* Preview */}
-            <div className="border rounded-lg p-4 bg-muted/20">
-              <h4 className="text-sm font-medium mb-2">Podgląd:</h4>
-              <div className="flex items-center gap-3">
-                <div 
-                  className="flex h-8 w-8 items-center justify-center rounded-md text-white"
-                  style={{ backgroundColor: selectedColor }}
-                >
-                  <SelectedIcon className="h-4 w-4" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">
-                      {form.watch('name') || 'Nazwa filtru'}
-                    </span>
-                    <div className="flex gap-1">
-                      {form.watch('addToSidebar') && (
-                        <Badge variant="secondary" className="text-xs">
-                          Sidebar
-                        </Badge>
-                      )}
-                      {isPublic && (
-                        <Badge variant="outline" className="text-xs">
-                          Publiczny
-                        </Badge>
-                      )}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* Current Filters Summary */}
+              <div className="border rounded-lg p-4 bg-muted/20">
+                <h4 className="text-sm font-medium mb-2">Zapisywane filtry:</h4>
+                <div className="space-y-1">
+                  {getFilterSummary().map((filter, index) => (
+                    <div key={index} className="text-sm text-muted-foreground">
+                      • {filter}
                     </div>
-                  </div>
-                  {form.watch('description') && (
-                    <p className="text-xs text-muted-foreground">
-                      {form.watch('description')}
-                    </p>
-                  )}
+                  ))}
                 </div>
               </div>
-            </div>
 
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Anuluj
-              </Button>
-              <Button type="submit">
-                Zapisz filtr
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nazwa filtru *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="np. Dostępne lakiery" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="addToSidebar"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="text-sm">
+                            Dodaj do sidebara
+                          </FormLabel>
+                          <FormDescription className="text-xs">
+                            Filtr będzie dostępny w menu bocznym
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="isPublic"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="text-sm">
+                            Filtr publiczny
+                          </FormLabel>
+                          <FormDescription className="text-xs">
+                            Inni użytkownicy w oddziale będą mogli zobaczyć i skopiować ten filtr
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Opis (opcjonalny)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Krótki opis filtru..."
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Maksymalnie 200 znaków
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="icon"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ikona *</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Wybierz ikonę">
+                              {field.value && (
+                                <div className="flex items-center gap-2">
+                                  <SelectedIcon className="h-4 w-4" />
+                                  {field.value}
+                                </div>
+                              )}
+                            </SelectValue>
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="max-h-[200px]">
+                          {iconOptions.map((icon) => {
+                            const IconComponent = Icons[icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
+                            return (
+                              <SelectItem key={icon} value={icon}>
+                                <div className="flex items-center gap-2">
+                                  <IconComponent className="h-4 w-4" />
+                                  {icon}
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="color"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Kolor *</FormLabel>
+                      <FormControl>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-8 h-8 rounded border"
+                              style={{ backgroundColor: field.value }}
+                            />
+                            <Input
+                              type="color"
+                              className="w-16 h-8 p-1 border rounded"
+                              {...field}
+                            />
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {colorOptions.map((color) => (
+                              <button
+                                key={color}
+                                type="button"
+                                className="w-6 h-6 rounded border-2 border-transparent hover:border-gray-300"
+                                style={{ backgroundColor: color }}
+                                onClick={() => field.onChange(color)}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Preview */}
+              <div className="border rounded-lg p-4 bg-muted/20">
+                <h4 className="text-sm font-medium mb-2">Podgląd:</h4>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-white"
+                    style={{ backgroundColor: selectedColor }}
+                  >
+                    <SelectedIcon className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">
+                        {form.watch('name') || 'Nazwa filtru'}
+                      </span>
+                      <div className="flex gap-1">
+                        {form.watch('addToSidebar') && (
+                          <Badge variant="secondary" className="text-xs">
+                            Sidebar
+                          </Badge>
+                        )}
+                        {isPublic && (
+                          <Badge variant="outline" className="text-xs">
+                            Publiczny
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    {form.watch('description') && (
+                      <p className="text-xs text-muted-foreground">
+                        {form.watch('description')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className="p-4 border-t bg-background sticky bottom-0 z-10">
+                <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                  Anuluj
+                </Button>
+                <Button type="submit" form="your-form-id-if-needed">
+                  Zapisz filtr
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

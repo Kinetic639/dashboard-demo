@@ -31,6 +31,7 @@ import {
   Crown,
   UserCheck,
   Briefcase,
+  Package,
   Calculator
 } from 'lucide-react';
 import { mockRoles, mockUserRoles, mockUsers } from '@/lib/mock/organization';
