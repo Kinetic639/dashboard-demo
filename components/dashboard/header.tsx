@@ -195,7 +195,7 @@ if (!hydrated) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center gap-2 px-2">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="" alt={mockUserFullName()} />
+                    <AvatarImage src={mockUser.avatar_url} alt={mockUserFullName()} />
                     <AvatarFallback className="text-xs">
                       {mockUserInitials()}
                     </AvatarFallback>

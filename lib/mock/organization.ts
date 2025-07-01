@@ -32,6 +32,7 @@ export const mockUsers: Tables<'users'>[] = [
     email: 'jan.kowalski@gcz-grupa.pl',
     first_name: 'Jan',
     last_name: 'Kowalski',
+    avatar_url: 'https://randomuser.me/api/portraits/men/32.jpg',
     created_at: '2023-01-15T00:00:00.000Z',
     status_id: 'active',
     default_branch_id: '550e8400-e29b-41d4-a716-446655440001', // Warsaw main
@@ -42,6 +43,7 @@ export const mockUsers: Tables<'users'>[] = [
     email: 'anna.nowak@gcz-grupa.pl',
     first_name: 'Anna',
     last_name: 'Nowak',
+    avatar_url: 'https://randomuser.me/api/portraits/women/44.jpg',
     created_at: '2023-02-01T00:00:00.000Z',
     status_id: 'active',
     default_branch_id: '550e8400-e29b-41d4-a716-446655440003', // Krakow
@@ -52,6 +54,7 @@ export const mockUsers: Tables<'users'>[] = [
     email: 'piotr.wisniewski@gcz-grupa.pl',
     first_name: 'Piotr',
     last_name: 'Wiśniewski',
+    avatar_url: 'https://randomuser.me/api/portraits/men/12.jpg',
     created_at: '2023-02-15T00:00:00.000Z',
     status_id: 'active',
     default_branch_id: '550e8400-e29b-41d4-a716-446655440004', // Gdansk
@@ -62,6 +65,7 @@ export const mockUsers: Tables<'users'>[] = [
     email: 'maria.wojcik@gcz-grupa.pl',
     first_name: 'Maria',
     last_name: 'Wójcik',
+    avatar_url: 'https://randomuser.me/api/portraits/women/76.jpg',
     created_at: '2023-03-01T00:00:00.000Z',
     status_id: 'active',
     default_branch_id: '550e8400-e29b-41d4-a716-446655440005', // Wroclaw
@@ -72,6 +76,7 @@ export const mockUsers: Tables<'users'>[] = [
     email: 'tomasz.kaminski@gcz-grupa.pl',
     first_name: 'Tomasz',
     last_name: 'Kamiński',
+    avatar_url: 'https://randomuser.me/api/portraits/men/90.jpg',
     created_at: '2023-03-15T00:00:00.000Z',
     status_id: 'active',
     default_branch_id: '550e8400-e29b-41d4-a716-446655440001', // Warsaw main
