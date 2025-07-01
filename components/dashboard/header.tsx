@@ -13,11 +13,16 @@ import {
   ChevronRight,
   Home,
   Settings,
+  Sun,
+  Moon,
+  Laptop,
+  SunMoon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSidebarStore } from '@/lib/stores/sidebar-store';
 import { useNotificationsStore } from '@/lib/stores/notifications-store';
 import { mockUserFullName, mockUserInitials, mockUser } from '@/lib/mock/user';
+import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -27,6 +32,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
+  DropdownMenuSubContent
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { NotificationsDrawer } from './notifications-drawer';
@@ -111,17 +120,18 @@ function generateBreadcrumbs(pathname: string) {
 }
 
 export function Header() {
+  const { setTheme } = useTheme();
   const pathname = usePathname();
   const { toggle, isCollapsed } = useSidebarStore();
   const { openDrawer, unreadCount } = useNotificationsStore();
-const hydrated = useHasHydrated();
-if (!hydrated) {
-  return (
-    <header className="h-16 flex items-center px-4">
-      <span className="text-sm text-muted-foreground">Ładowanie oddziału...</span>
-    </header>
-  );
-}
+  const hydrated = useHasHydrated();
+  if (!hydrated) {
+    return (
+      <header className="h-16 flex items-center px-4">
+        <span className="text-sm text-muted-foreground">Ładowanie oddziału...</span>
+      </header>
+    );
+  }
   const breadcrumbs = generateBreadcrumbs(pathname);
 
   const handleToggle = () => {
@@ -229,6 +239,28 @@ if (!hydrated) {
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Ustawienia</span>
                 </DropdownMenuItem>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <SunMoon className="mr-2 h-4 w-4" />
+                    <span>Motyw</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem onClick={() => setTheme('light')}>
+                        <Sun className="mr-2 h-4 w-4" />
+                        <span>Jasny</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTheme('dark')}>
+                        <Moon className="mr-2 h-4 w-4" />
+                        <span>Ciemny</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTheme('system')}>
+                        <Laptop className="mr-2 h-4 w-4" />
+                        <span>Systemowy</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-red-600 focus:text-red-600">
                   <LogOut className="mr-2 h-4 w-4" />
