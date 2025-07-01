@@ -38,7 +38,7 @@ export interface QuickAction {
   id: string;
   label: string;
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: string;
 }
 
 export interface ActivityLog {
