@@ -52,7 +52,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
 
         {/* Scrollable content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto flex-grow">
           <div className="p-4 lg:p-6">{children}</div>
         </main>
       </div>

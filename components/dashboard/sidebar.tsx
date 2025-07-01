@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { useSidebarStore } from '@/lib/stores/sidebar-store';
 import { useBranchStore } from '@/lib/stores/branch-store';
 import { useSavedFiltersStore } from '@/lib/stores/saved-filters-store';
+import { getHomeModule } from '@/lib/modules/home/config';
 import { getWarehouseModule } from '@/lib/modules/warehouse/config';
 import { getOrganizationModule } from '@/lib/modules/organization/config';
 import { MenuItem } from '@/lib/types/module';
@@ -181,6 +182,7 @@ export function Sidebar() {
   const { isCollapsed } = useSidebarStore();
   const { activeBranchId, _hasHydrated: branchHydrated } = useBranchStore();
   const { _hasHydrated: filtersHydrated } = useSavedFiltersStore();
+  const [homeModule, setHomeModule] = React.useState<any>(null);
   const [warehouseModule, setWarehouseModule] = React.useState<any>(null);
   const [organizationModule, setOrganizationModule] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
@@ -193,10 +195,12 @@ export function Sidebar() {
 
     const loadModules = async () => {
       try {
-        const [warehouse, organization] = await Promise.all([
+        const [home, warehouse, organization] = await Promise.all([
+          getHomeModule(),
           getWarehouseModule(activeBranchId),
           getOrganizationModule()
         ]);
+        setHomeModule(home);
         setWarehouseModule(warehouse);
         setOrganizationModule(organization);
       } catch (error) {
@@ -250,6 +254,32 @@ export function Sidebar() {
             </div>
           ) : (
             <div className="space-y-6">
+              {/* Home Module */}
+              {homeModule && (
+                <div>
+                  <AnimatePresence>
+                    {!isCollapsed && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="px-3 mb-2"
+                      >
+                        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                          {homeModule.name}
+                        </h2>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <NavigationTree items={homeModule.items} />
+                </div>
+              )}
+
+              {/* Separator */}
+              {homeModule && warehouseModule && (
+                <Separator className="mx-3" />
+              )}
+
               {/* Warehouse Module */}
               {warehouseModule && (
                 <div>
