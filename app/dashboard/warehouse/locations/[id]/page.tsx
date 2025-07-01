@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { branchLocationsMap, getLocationProductCountByBranch, mockBranches } from '@/lib/mock/branches';
 import { buildLocationTree } from '@/lib/utils/build-location-tree';
+import { LocationQrActions } from '@/components/locations/location-qr-actions';
 import { 
   MapPin, 
   Package, 
@@ -127,6 +128,10 @@ function LocationDetailsContent({ locationId }: { locationId: string }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <LocationQrActions 
+            locationId={locationId} 
+            locationName={location.name} 
+          />
           <Button variant="outline">
             <ClipboardList className="mr-2 h-4 w-4" />
             Przeprowadź audyt
