@@ -101,6 +101,7 @@ export function SaveFilterDialog({
   const SelectedIcon = Icons[selectedIcon as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
 
   const onSubmit = (data: SaveFilterFormData) => {
+      console.log("Submitting:", data);
     addSavedFilter({
       ...data,
       filters: currentFilters,

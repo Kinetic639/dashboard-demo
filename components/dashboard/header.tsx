@@ -41,6 +41,8 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import Link from 'next/link';
+import { useBranchStore } from '@/lib/stores/branch-store';
+import { useHasHydrated } from '@/hooks/use-hydrated-value';
 
 function generateBreadcrumbs(pathname: string) {
   const segments = pathname.split('/').filter(Boolean);
@@ -112,7 +114,14 @@ export function Header() {
   const pathname = usePathname();
   const { toggle, isCollapsed } = useSidebarStore();
   const { openDrawer, unreadCount } = useNotificationsStore();
-
+const hydrated = useHasHydrated();
+if (!hydrated) {
+  return (
+    <header className="h-16 flex items-center px-4">
+      <span className="text-sm text-muted-foreground">Ładowanie oddziału...</span>
+    </header>
+  );
+}
   const breadcrumbs = generateBreadcrumbs(pathname);
 
   const handleToggle = () => {

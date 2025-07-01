@@ -18,13 +18,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useBranchStore } from '@/lib/stores/branch-store';
+import { useHasHydrated } from '@/hooks/use-hydrated-value';
 
 export function BranchSelector() {
   const [open, setOpen] = React.useState(false);
-  const { activeBranchId, branches, setActiveBranch, getActiveBranch, _hasHydrated } = useBranchStore();
-  
-  // Don't render until hydrated to prevent hydration mismatch
-  if (!_hasHydrated) {
+  const { activeBranchId, branches, setActiveBranch, getActiveBranch } = useBranchStore();
+const hydrated = useHasHydrated();
+if (!hydrated) {
     return (
       <Button
         variant="outline"
