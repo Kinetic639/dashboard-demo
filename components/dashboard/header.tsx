@@ -133,7 +133,7 @@ export function Header() {
     );
   }
   const breadcrumbs = generateBreadcrumbs(pathname);
-
+const showBreadcrumbs = pathname !== '/dashboard';
   const handleToggle = () => {
     // On mobile, always toggle between open/closed
     // On desktop, toggle between collapsed/expanded
@@ -271,8 +271,8 @@ export function Header() {
           </div>
         </div>
 
-        {/* Breadcrumbs */}
-        <div className="border-t bg-muted/20 px-4 py-2">
+      {showBreadcrumbs && (
+           <div className="border-t bg-muted/20 px-4 py-2">
           <Breadcrumb>
             <BreadcrumbList>
               {breadcrumbs.map((crumb, index) => (
@@ -290,7 +290,7 @@ export function Header() {
                               <Home className="h-3 w-3" />
                               <span className="sr-only">Strona główna</span>
                             </>
-                          ) : (
+                          ) : ( 
                             crumb.label
                           )}
                         </Link>
@@ -307,6 +307,9 @@ export function Header() {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
+      )
+    }
+     
       </header>
 
       <NotificationsDrawer />

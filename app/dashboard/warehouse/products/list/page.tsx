@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -22,11 +22,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { 
-  Package, 
-  Search, 
-  Grid3X3, 
-  List, 
+import {
+  Package,
+  Search,
+  Grid3X3,
+  List,
   TableIcon,
   Filter,
   ChevronLeft,
@@ -51,6 +51,7 @@ import { SavedFiltersManager } from '@/components/products/saved-filters-manager
 import { SavedFilter } from '@/lib/types/saved-filters';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { ProductCard } from '@/components/products/product-card';
 
 type ViewMode = 'cards' | 'list' | 'table';
 type ProductType = 'all' | 'simple' | 'variant';
@@ -93,7 +94,7 @@ export default function ProductsListPage() {
   // Update URL when filters change
   const updateURL = React.useCallback((updates: Record<string, string | number>) => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     Object.entries(updates).forEach(([key, value]) => {
       if (value && value !== 'all' && value !== '' && value !== 1) {
         params.set(key, value.toString());
@@ -117,7 +118,7 @@ export default function ProductsListPage() {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        const matchesSearch = 
+        const matchesSearch =
           product.name.toLowerCase().includes(query) ||
           product.sku?.toLowerCase().includes(query) ||
           product.code?.toLowerCase().includes(query) ||
@@ -156,10 +157,10 @@ export default function ProductsListPage() {
 
   // Check if any filters are active
   const hasActiveFilters = React.useMemo(() => {
-    return searchQuery !== '' || 
-           productTypeFilter !== 'all' || 
-           availabilityFilter !== 'all' || 
-           serviceFilter !== 'all';
+    return searchQuery !== '' ||
+      productTypeFilter !== 'all' ||
+      availabilityFilter !== 'all' ||
+      serviceFilter !== 'all';
   }, [searchQuery, productTypeFilter, availabilityFilter, serviceFilter]);
 
   // Update URL when filters change
@@ -243,7 +244,7 @@ export default function ProductsListPage() {
     setAvailabilityFilter((filter.filters.availability as AvailabilityFilter) || 'all');
     setServiceFilter((filter.filters.service as ServiceFilter) || 'all');
     setCurrentPage(1);
-    
+
     toast({
       title: 'Filtr zastosowany',
       description: `Zastosowano filtr "${filter.name}".`,
@@ -265,7 +266,7 @@ export default function ProductsListPage() {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.2 }}
     >
-      <Card 
+      <Card
         className="h-full hover:shadow-md transition-shadow cursor-pointer group"
         onClick={() => handleProductClick(product.id)}
       >
@@ -281,7 +282,7 @@ export default function ProductsListPage() {
                     {product.sku}
                   </Badge>
                 )}
-                <Badge 
+                <Badge
                   variant={product.isAvailable ? 'default' : 'secondary'}
                   className="text-xs"
                 >
@@ -305,7 +306,7 @@ export default function ProductsListPage() {
           <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
             {product.description}
           </p>
-          
+
           <div className="space-y-2">
             {product.inventory && (
               <div className="flex items-center justify-between text-sm">
@@ -315,7 +316,7 @@ export default function ProductsListPage() {
                 </span>
               </div>
             )}
-            
+
             {product.inventory?.supplier_ids && (
               <div className="flex items-center gap-2">
                 <Truck className="h-3 w-3 text-muted-foreground" />
@@ -344,7 +345,7 @@ export default function ProductsListPage() {
       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
         <Package className="h-6 w-6 text-primary" />
       </div>
-      
+
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           <h3 className="font-semibold truncate group-hover:text-primary transition-colors">
@@ -360,7 +361,7 @@ export default function ProductsListPage() {
           {product.description}
         </p>
       </div>
-      
+
       <div className="flex items-center gap-4">
         <div className="text-center">
           <div className="text-sm font-medium">
@@ -368,7 +369,7 @@ export default function ProductsListPage() {
           </div>
           <div className="text-xs text-muted-foreground">Stan</div>
         </div>
-        
+
         {product.inventory && (
           <div className="text-center">
             <div className="text-sm font-medium">
@@ -377,7 +378,7 @@ export default function ProductsListPage() {
             <div className="text-xs text-muted-foreground">Cena</div>
           </div>
         )}
-        
+
         <div className="flex items-center gap-2">
           {product.isAvailable ? (
             <CheckCircle className="h-4 w-4 text-green-500" />
@@ -505,8 +506,8 @@ export default function ProductsListPage() {
               </div>
 
               <div className="flex items-end">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full"
                   onClick={handleClearFilters}
                 >
@@ -565,7 +566,13 @@ export default function ProductsListPage() {
               exit={{ opacity: 0 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
-              {paginatedProducts.map(renderProductCard)}
+              {paginatedProducts.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onClick={handleProductClick}
+                />
+              ))}
             </motion.div>
           )}
 
@@ -695,13 +702,13 @@ export default function ProductsListPage() {
             <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
             <h3 className="text-lg font-medium mb-2">Brak produktów</h3>
             <p className="text-muted-foreground mb-4">
-              {allProducts.length === 0 
+              {allProducts.length === 0
                 ? `Brak produktów w oddziale ${activeBranch?.name || 'aktywnym'}.`
                 : 'Nie znaleziono produktów pasujących do wybranych filtrów.'
               }
             </p>
             {filteredProducts.length === 0 && allProducts.length > 0 && (
-              <Button 
+              <Button
                 variant="outline"
                 onClick={handleClearFilters}
               >
@@ -729,7 +736,7 @@ export default function ProductsListPage() {
             <ChevronLeft className="h-4 w-4" />
             Poprzednia
           </Button>
-          
+
           <div className="flex items-center gap-1">
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               let pageNum;
@@ -742,7 +749,7 @@ export default function ProductsListPage() {
               } else {
                 pageNum = currentPage - 2 + i;
               }
-              
+
               return (
                 <Button
                   key={pageNum}
@@ -756,7 +763,7 @@ export default function ProductsListPage() {
               );
             })}
           </div>
-          
+
           <Button
             variant="outline"
             size="sm"

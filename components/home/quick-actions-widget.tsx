@@ -115,33 +115,40 @@ export const QuickActionsWidget = () => {
 
   return (
     <Card className="col-span-full">
-      <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center justify-between">
-        <CardTitle className="text-base">Szybkie akcje</CardTitle>
+         <CardHeader className="p-0 pt-2 pl-2">
+        <CardTitle className="text-sm font-medium">Szybkie akcje</CardTitle>
+        {/* <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)}>
+          <Settings className="h-4 w-4" />
+        </Button> */}
+      </CardHeader>
+      <CardContent className="flex flex-wrap justify-between items-center gap-2 p-2">
+        <div className="flex gap-2">
+          <TooltipProvider>
+            {visibleActions.map((action) => {
+              const Icon = IconComponents[action.icon];
+              if (!Icon) return null; // Handle case where icon might not be found
+              return (
+                <Tooltip key={action.id}>
+                  <TooltipTrigger asChild>
+                    <Button asChild variant="outline" size="icon">
+                      <Link href={action.href} passHref>
+                        <Icon className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{action.label}</p>
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })}
+          </TooltipProvider>
+        </div>
+
+
         <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)}>
           <Settings className="h-4 w-4" />
         </Button>
-      </CardHeader>
-      <CardContent className="flex flex-wrap gap-2">
-        <TooltipProvider>
-          {visibleActions.map((action) => {
-            const Icon = IconComponents[action.icon];
-            if (!Icon) return null; // Handle case where icon might not be found
-            return (
-              <Tooltip key={action.id}>
-                <TooltipTrigger asChild>
-                  <Button asChild variant="outline" size="icon">
-                    <Link href={action.href} passHref>
-                      <Icon className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{action.label}</p>
-                </TooltipContent>
-              </Tooltip>
-            );
-          })}
-        </TooltipProvider>
       </CardContent>
 
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
